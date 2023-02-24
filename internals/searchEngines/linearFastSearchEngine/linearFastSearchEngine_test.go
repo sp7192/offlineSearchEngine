@@ -4,10 +4,9 @@ import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	"bufio"
+	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestNewLinearFastSearchEngine(t *testing.T) {
@@ -28,7 +27,7 @@ type AddDataInput struct {
 func TestAddData(t *testing.T) {
 	tests := map[string]struct {
 		input    []AddDataInput
-		expected []models.TermInfoWithFrequency
+		expected models.TermsInfoWithFrequencies
 	}{
 		`empty`: {
 			input: []AddDataInput{
@@ -96,8 +95,8 @@ func TestAddData(t *testing.T) {
 				de.AddData(sc, v.docId)
 			}
 
-			if diff := cmp.Diff(de.data, tt.expected); diff != "" {
-				t.Error(diff)
+			if !reflect.DeepEqual(de.data, tt.expected) {
+				t.Errorf("got : %s\nexpected : %s\n", de.data, tt.expected)
 			}
 		})
 	}

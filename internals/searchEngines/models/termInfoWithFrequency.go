@@ -1,5 +1,7 @@
 package models
 
+import "fmt"
+
 type TermInfoWithFrequency struct {
 	Term          string
 	DocId         int
@@ -8,13 +10,17 @@ type TermInfoWithFrequency struct {
 
 type TermsInfoWithFrequencies []TermInfoWithFrequency
 
-func (ti TermsInfoWithFrequencies) Find(docId int) int {
+func (ti TermsInfoWithFrequencies) Find(term string, docId int) int {
 	index := -1
 	for i, v := range ti {
-		if v.DocId == docId {
+		if v.Term == term && v.DocId == docId {
 			index = i
 			break
 		}
 	}
 	return index
+}
+
+func (ti TermInfoWithFrequency) String() string {
+	return fmt.Sprintf("{Term: %s, DocId: %d, TermFrequency:%d}", ti.Term, ti.DocId, ti.TermFrequency)
 }
