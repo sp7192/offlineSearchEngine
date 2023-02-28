@@ -2,7 +2,10 @@ package linearFastSearchEngine
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
+	"OfflineSearchEngine/internals/searchEngines/interfaces"
 	"OfflineSearchEngine/internals/searchEngines/models"
+	testutils "OfflineSearchEngine/internals/searchEngines/utils"
+
 	"bufio"
 	"reflect"
 	"strings"
@@ -100,4 +103,12 @@ func TestAddData(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestLinearFastSearchEngineSearch(t *testing.T) {
+	lm := linguisticprocess.CreateLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
+	testutils.SearchEngineTest(t, func() interfaces.ISearchEngine {
+		se := NewLinearFastSearchEngine(500, lm)
+		return se
+	})
 }
