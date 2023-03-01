@@ -3,6 +3,7 @@ package linearsortedengine
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/searchEngines/models"
+
 	"bufio"
 	"sort"
 )
@@ -12,7 +13,7 @@ type LinearSorterdEngine struct {
 	stringConverter linguisticprocess.IStringConverter
 }
 
-func NewLinearSorterdEngine(capacity int, converter linguisticprocess.IStringConverter) *LinearSorterdEngine {
+func NewLinearSortedEngine(capacity int, converter linguisticprocess.IStringConverter) *LinearSorterdEngine {
 	return &LinearSorterdEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), stringConverter: converter}
 }
 
@@ -35,13 +36,16 @@ func (se *LinearSorterdEngine) AddData(sc *bufio.Scanner, docId int) {
 
 func (se *LinearSorterdEngine) Search(q string) (models.SearchResults, bool) {
 	ret := make(models.SearchResults, 0, 16)
+	if len(se.data) == 0 {
+		return ret, false
+	}
 
 	index := se.data.BinaryFindFirst(q)
 	if index == -1 {
 		return ret, false
 	}
 
-	for {
+	for index < len(se.data) {
 		if se.data[index].Term != q {
 			break
 		}
