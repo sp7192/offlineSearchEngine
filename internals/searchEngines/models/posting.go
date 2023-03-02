@@ -1,8 +1,14 @@
 package models
 
+import "fmt"
+
 type Posting struct {
 	DocId         int
 	TermFrequency int
+}
+
+func (p Posting) String() string {
+	return fmt.Sprintf("{DocId: %d, TermFrequency: %d}", p.DocId, p.TermFrequency)
 }
 
 type Postings []Posting
