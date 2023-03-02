@@ -19,7 +19,7 @@ func NewLinearSortedEngineWithPosting(capacity int, converter linguisticprocess.
 func (se *LinearSorterdEngineWithPosting) AddDataToPostingList(index int, str string, docId int) {
 	i := se.data[index].PostingList.Find(docId)
 	if i == -1 {
-		se.data[index].PostingList = append(se.data[index].PostingList, models.Posting{
+		se.data[index].PostingList = append(se.data[index].PostingList, models.SearchResult{
 			DocId:         docId,
 			TermFrequency: 1,
 		})
@@ -36,7 +36,7 @@ func (se *LinearSorterdEngineWithPosting) AddData(sc *bufio.Scanner, docId int) 
 			if index == -1 {
 				se.data = append(se.data, models.TermPostings{
 					Term:        str,
-					PostingList: models.Postings{{DocId: docId, TermFrequency: 1}},
+					PostingList: models.SearchResults{{DocId: docId, TermFrequency: 1}},
 				})
 			} else {
 				se.AddDataToPostingList(index, str, docId)
@@ -50,5 +50,15 @@ func (se *LinearSorterdEngineWithPosting) AddData(sc *bufio.Scanner, docId int) 
 
 func (se *LinearSorterdEngineWithPosting) Search(q string) (models.SearchResults, bool) {
 	ret := make(models.SearchResults, 0, 16)
+	if len(se.data) == 0 {
+		return ret, false
+	}
+
+	index := se.data.BinarySearch(q)
+	if index == -1 {
+		return ret, false
+	}
+
+	ret = se.data[index].PostingList
 	return ret, len(ret) != 0
 }

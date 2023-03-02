@@ -48,9 +48,9 @@ func TestAddData(t *testing.T) {
 				},
 			},
 			expected: []models.TermPostings{
-				{Term: "baar", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
-				{Term: "boo", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
-				{Term: "foo", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
+				{Term: "baar", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "boo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "foo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
 			},
 		},
 		`linguisticCase`: {
@@ -61,9 +61,9 @@ func TestAddData(t *testing.T) {
 				},
 			},
 			expected: []models.TermPostings{
-				{Term: "baar", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
-				{Term: "boo", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
-				{Term: "foo", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
+				{Term: "baar", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "boo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "foo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
 			},
 		},
 		`multipleFile`: {
@@ -78,9 +78,9 @@ func TestAddData(t *testing.T) {
 				},
 			},
 			expected: []models.TermPostings{
-				{Term: "baar", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
-				{Term: "boo", PostingList: []models.Posting{{DocId: 1, TermFrequency: 1}}},
-				{Term: "foo", PostingList: []models.Posting{{DocId: 1, TermFrequency: 2}, {DocId: 2, TermFrequency: 4}}},
+				{Term: "baar", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "boo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "foo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 2}, {DocId: 2, TermFrequency: 4}}},
 			},
 		},
 	}
@@ -92,7 +92,6 @@ func TestAddData(t *testing.T) {
 			for _, v := range tt.input {
 				sc := bufio.NewScanner(strings.NewReader(v.text))
 				sc.Split(bufio.ScanWords)
-
 				de.AddData(sc, v.docId)
 			}
 
