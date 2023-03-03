@@ -12,7 +12,7 @@ type InvertedIndexEngine struct {
 }
 
 func NewInvertedIndexEngine(capacity int, converter linguisticprocess.IStringConverter) *InvertedIndexEngine {
-	return &InvertedIndexEngine{data: make(map[string]models.SearchResults), stringConverter: converter}
+	return &InvertedIndexEngine{data: make(map[string]models.SearchResults, capacity), stringConverter: converter}
 }
 
 func (se *InvertedIndexEngine) AddData(sc *bufio.Scanner, docId int) {
@@ -20,13 +20,21 @@ func (se *InvertedIndexEngine) AddData(sc *bufio.Scanner, docId int) {
 		str := se.stringConverter.Convert(sc.Text())
 		if str != "" {
 			_, ok := se.data[str]
-			if !ok || len(se.data[str]) == 0 {
-				se.data[str] = append(se.data[str], models.SearchResult{
+			if !ok {
+				se.data[str] = []models.SearchResult{{
 					DocId:         docId,
 					TermFrequency: 1,
-				})
+				}}
 			} else {
-				// TODO : to be implemented
+				index := se.data[str].Find(docId)
+				if index == -1 {
+					se.data[str] = append(se.data[str], models.SearchResult{
+						DocId:         docId,
+						TermFrequency: 1,
+					})
+				} else {
+					se.data[str][index].TermFrequency++
+				}
 			}
 		}
 	}
@@ -34,7 +42,9 @@ func (se *InvertedIndexEngine) AddData(sc *bufio.Scanner, docId int) {
 }
 
 func (se *InvertedIndexEngine) Search(q string) (models.SearchResults, bool) {
-	ret := make(models.SearchResults, 0, 16)
-	// TODO : to be implemented
-	return ret, len(ret) != 0
+	res, ok := se.data[q]
+	if !ok {
+		return []models.SearchResult{}, false
+	}
+	return res, true
 }
