@@ -1,19 +1,18 @@
-package linearFastSearchEngine
+package linearsortedenginewithposting
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/searchEngines/interfaces"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	testutils "OfflineSearchEngine/internals/searchEngines/utils"
-
 	"bufio"
 	"reflect"
 	"strings"
 	"testing"
 )
 
-func TestNewLinearFastSearchEngine(t *testing.T) {
-	de := NewLinearFastSearchEngine(500, nil)
+func TestNewLinearSortedEngineWithPosting(t *testing.T) {
+	de := NewLinearSortedEngineWithPosting(500, nil)
 	if cap(de.data) != 500 {
 		t.Errorf("got cap : %d, want : %d", cap(de.data), 500)
 	}
@@ -30,7 +29,7 @@ type AddDataInput struct {
 func TestAddData(t *testing.T) {
 	tests := map[string]struct {
 		input    []AddDataInput
-		expected models.TermsInfoWithFrequencies
+		expected models.TermPostingsArray
 	}{
 		`empty`: {
 			input: []AddDataInput{
@@ -39,7 +38,7 @@ func TestAddData(t *testing.T) {
 					docId: 1,
 				},
 			},
-			expected: []models.TermInfoWithFrequency{},
+			expected: []models.TermPostings{},
 		},
 		`simple text`: {
 			input: []AddDataInput{
@@ -48,10 +47,10 @@ func TestAddData(t *testing.T) {
 					docId: 1,
 				},
 			},
-			expected: []models.TermInfoWithFrequency{
-				{Term: "foo", DocId: 1, TermFrequency: 1},
-				{Term: "baar", DocId: 1, TermFrequency: 1},
-				{Term: "boo", DocId: 1, TermFrequency: 1},
+			expected: []models.TermPostings{
+				{Term: "baar", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "boo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "foo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
 			},
 		},
 		`linguisticCase`: {
@@ -61,10 +60,10 @@ func TestAddData(t *testing.T) {
 					docId: 1,
 				},
 			},
-			expected: []models.TermInfoWithFrequency{
-				{Term: "foo", DocId: 1, TermFrequency: 1},
-				{Term: "baar", DocId: 1, TermFrequency: 1},
-				{Term: "boo", DocId: 1, TermFrequency: 1},
+			expected: []models.TermPostings{
+				{Term: "baar", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "boo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "foo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
 			},
 		},
 		`multipleFile`: {
@@ -78,11 +77,10 @@ func TestAddData(t *testing.T) {
 					docId: 2,
 				},
 			},
-			expected: []models.TermInfoWithFrequency{
-				{Term: "foo", DocId: 1, TermFrequency: 2},
-				{Term: "baar", DocId: 1, TermFrequency: 1},
-				{Term: "boo", DocId: 1, TermFrequency: 1},
-				{Term: "foo", DocId: 2, TermFrequency: 4},
+			expected: []models.TermPostings{
+				{Term: "baar", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "boo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 1}}},
+				{Term: "foo", PostingList: []models.SearchResult{{DocId: 1, TermFrequency: 2}, {DocId: 2, TermFrequency: 4}}},
 			},
 		},
 	}
@@ -90,11 +88,10 @@ func TestAddData(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			lm := linguisticprocess.CreateLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
-			de := NewLinearFastSearchEngine(100, lm)
+			de := NewLinearSortedEngineWithPosting(100, lm)
 			for _, v := range tt.input {
 				sc := bufio.NewScanner(strings.NewReader(v.text))
 				sc.Split(bufio.ScanWords)
-
 				de.AddData(sc, v.docId)
 			}
 
@@ -105,10 +102,10 @@ func TestAddData(t *testing.T) {
 	}
 }
 
-func TestLinearFastSearchEngineSearch(t *testing.T) {
+func TestLinearSortedEngineSearch(t *testing.T) {
 	lm := linguisticprocess.CreateLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
 	testutils.SearchEngineTest(t, func() interfaces.ISearchEngine {
-		se := NewLinearFastSearchEngine(500, lm)
+		se := NewLinearSortedEngineWithPosting(500, lm)
 		return se
 	})
 }
