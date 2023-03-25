@@ -60,7 +60,7 @@ func getFileNames(path string) ([]string, error) {
 	}
 	for _, file := range files {
 		if !file.IsDir() {
-			ret = append(ret, file.Name())
+			ret = append(ret, path+string(os.PathSeparator)+file.Name())
 		}
 	}
 	return ret, nil

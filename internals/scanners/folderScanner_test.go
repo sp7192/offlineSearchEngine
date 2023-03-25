@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestScan(t *testing.T) {
@@ -19,6 +21,30 @@ func TestScan(t *testing.T) {
 	})
 	if err != nil {
 		fmt.Println(err)
+	}
+}
+
+func TestNewFolderScanner(t *testing.T) {
+	tests := map[string]struct {
+		input             string
+		expectedFileNames []string
+	}{
+		`test_case_1`: {
+			input:             "./testdata",
+			expectedFileNames: []string{"d.txt", "e.txt"},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			fs, err := NewFolderScanner(test.input)
+			require.NoError(t, err)
+			require.NotEmpty(t, fs)
+			require.True(t, true, reflect.DeepEqual(test.expectedFileNames, fs.fileNames))
+			require.NotNil(t, fs.currentFile)
+			require.NotNil(t, fs.currentScanner)
+			require.Zero(t, fs.currentFileIndex)
+		})
 	}
 }
 
