@@ -3,6 +3,7 @@ package builder
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/searchEngines/interfaces"
+	"OfflineSearchEngine/internals/searchEngines/invertedIndexEngine"
 	"OfflineSearchEngine/internals/searchEngines/linearFastAddEngine"
 	"OfflineSearchEngine/internals/searchEngines/linearFastSearchEngine"
 	linearsortedengine "OfflineSearchEngine/internals/searchEngines/linearSortedEngine"
@@ -20,7 +21,7 @@ func NewSearchEngine(name string, capacity int, converter linguisticprocess.IStr
 	case "LinearSortedEngineWithPosting":
 		return linearsortedenginewithposting.NewLinearSortedEngineWithPosting(capacity, converter)
 	case "InvertedIndex":
-		return nil
+		return invertedIndexEngine.NewInvertedIndexEngine(capacity, converter)
 	}
 	return nil
 }
