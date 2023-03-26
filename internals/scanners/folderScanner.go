@@ -2,79 +2,48 @@ package scanners
 
 import (
 	"bufio"
-	"fmt"
-	"io/ioutil"
-	"os"
 )
 
 type FolderScanner struct {
-	fileNames        []string
-	currentFileIndex int
-	currentScanner   *bufio.Scanner
-	currentFile      *os.File
+	readClosers    IReadClosers
+	currentScanner *bufio.Scanner
 }
 
-func NewFolderScanner(path string) (FolderScanner, error) {
-	fileNames, err := getFileNames(path)
-	if err != nil {
-		return FolderScanner{}, err
-	}
-
-	if len(fileNames) == 0 {
-		return FolderScanner{}, fmt.Errorf("no file found")
-	}
-
+func NewFolderScanner(readClosers IReadClosers) (FolderScanner, error) {
 	ret := FolderScanner{
-		fileNames: fileNames,
+		readClosers: readClosers,
 	}
-
-	err = ret.updateScanner()
+	err := ret.updateScanner()
 	if err != nil {
 		return FolderScanner{}, err
 	}
-
 	return ret, nil
 }
 
 func (fs *FolderScanner) updateScanner() error {
-	var err error
-	fs.currentFile, err = os.Open(fs.fileNames[fs.currentFileIndex])
+	reader, err := fs.readClosers.GetCurrentReader()
 	if err != nil {
 		return err
 	}
-	fs.currentScanner = bufio.NewScanner(fs.currentFile)
+	fs.currentScanner = bufio.NewScanner(reader)
 	return nil
 }
 
-func (fs *FolderScanner) closeScanner() {
-	fs.currentFile.Close()
-	fs.currentFileIndex++
-}
-
-func getFileNames(path string) ([]string, error) {
-	ret := make([]string, 0, 32)
-	files, err := ioutil.ReadDir(path)
-	if err != nil {
-		fmt.Printf("could not get files, err is : %s\n", err.Error())
-		return ret, err
-	}
-	for _, file := range files {
-		if !file.IsDir() {
-			ret = append(ret, path+string(os.PathSeparator)+file.Name())
-		}
-	}
-	return ret, nil
-}
-
 func (fs *FolderScanner) Scan() bool {
-	if fs.currentFileIndex >= len(fs.fileNames) {
-		return false
-	}
 
 	ok := fs.currentScanner.Scan()
 	if !ok {
-		fs.closeScanner()
-		fs.updateScanner()
+
+		ok = fs.readClosers.Next()
+		if !ok {
+			return false
+		}
+
+		err := fs.updateScanner()
+		if err != nil {
+			return false
+		}
+
 		return fs.Scan()
 	}
 	return true
