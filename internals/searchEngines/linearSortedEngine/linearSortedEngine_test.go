@@ -13,7 +13,7 @@ import (
 )
 
 func TestNewLinearSortedEngine(t *testing.T) {
-	de := NewLinearSortedEngine(500, nil)
+	de := NewLinearSortedEngine(500, nil, nil)
 	if cap(de.data) != 500 {
 		t.Errorf("got cap : %d, want : %d", cap(de.data), 500)
 	}
@@ -90,7 +90,7 @@ func TestAddData(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			lm := linguisticprocess.CreateLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
-			de := NewLinearSortedEngine(100, lm)
+			de := NewLinearSortedEngine(100, lm, nil)
 			for _, v := range tt.input {
 				sc := bufio.NewScanner(strings.NewReader(v.text))
 				sc.Split(bufio.ScanWords)
@@ -108,7 +108,7 @@ func TestAddData(t *testing.T) {
 func TestLinearSortedEngineSearch(t *testing.T) {
 	lm := linguisticprocess.CreateLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
 	testutils.SearchEngineTest(t, func() interfaces.ISearchEngine {
-		se := NewLinearSortedEngine(500, lm)
+		se := NewLinearSortedEngine(500, lm, nil)
 		return se
 	})
 }

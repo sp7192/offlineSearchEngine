@@ -2,6 +2,7 @@ package linearFastAddEngine
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	"bufio"
 )
@@ -11,7 +12,7 @@ type LinearFastAddEngine struct {
 	stringConverter linguisticprocess.IStringConverter
 }
 
-func NewLinearFastAddEngine(capacity int, converter linguisticprocess.IStringConverter) *LinearFastAddEngine {
+func NewLinearFastAddEngine(capacity int, converter linguisticprocess.IStringConverter, scanner scanners.IScanner) *LinearFastAddEngine {
 	return &LinearFastAddEngine{data: make([]models.TermInfo, 0, capacity), stringConverter: converter}
 }
 

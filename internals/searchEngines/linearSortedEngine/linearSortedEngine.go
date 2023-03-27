@@ -2,6 +2,7 @@ package linearsortedengine
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 
 	"bufio"
@@ -13,7 +14,7 @@ type LinearSorterdEngine struct {
 	stringConverter linguisticprocess.IStringConverter
 }
 
-func NewLinearSortedEngine(capacity int, converter linguisticprocess.IStringConverter) *LinearSorterdEngine {
+func NewLinearSortedEngine(capacity int, converter linguisticprocess.IStringConverter, scanner scanners.IScanner) *LinearSorterdEngine {
 	return &LinearSorterdEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), stringConverter: converter}
 }
 

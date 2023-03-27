@@ -2,6 +2,7 @@ package linearFastSearchEngine
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 
 	"bufio"
@@ -12,7 +13,7 @@ type LinearFastSearchEngine struct {
 	stringConverter linguisticprocess.IStringConverter
 }
 
-func NewLinearFastSearchEngine(capacity int, converter linguisticprocess.IStringConverter) *LinearFastSearchEngine {
+func NewLinearFastSearchEngine(capacity int, converter linguisticprocess.IStringConverter, scanner scanners.IScanner) *LinearFastSearchEngine {
 	return &LinearFastSearchEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), stringConverter: converter}
 }
 

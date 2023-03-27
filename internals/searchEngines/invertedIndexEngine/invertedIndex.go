@@ -2,6 +2,7 @@ package invertedIndexEngine
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	"bufio"
 )
@@ -11,7 +12,7 @@ type InvertedIndexEngine struct {
 	stringConverter linguisticprocess.IStringConverter
 }
 
-func NewInvertedIndexEngine(capacity int, converter linguisticprocess.IStringConverter) *InvertedIndexEngine {
+func NewInvertedIndexEngine(capacity int, converter linguisticprocess.IStringConverter, scanner scanners.IScanner) *InvertedIndexEngine {
 	return &InvertedIndexEngine{data: make(map[string]models.SearchResults, capacity), stringConverter: converter}
 }
 
