@@ -37,7 +37,7 @@ func TestGetFileNames(t *testing.T) {
 	}
 }
 
-func TestNewFolderScanner(t *testing.T) {
+func TestNewFileReaderClosers(t *testing.T) {
 	tests := map[string]struct {
 		input             string
 		expectedFileNames []string
@@ -58,4 +58,32 @@ func TestNewFolderScanner(t *testing.T) {
 			require.Zero(t, fs.currentFileIndex)
 		})
 	}
+}
+
+func TestGetCurrentReader(t *testing.T) {
+	fs, err := NewFileReaderClosers("./testdata")
+	require.NoError(t, err)
+	reader, err := fs.GetCurrentReader()
+	require.NoError(t, err)
+	require.NotNil(t, reader)
+	bytes := make([]byte, 64)
+	n, err := reader.Read(bytes)
+	require.NoError(t, err)
+	require.Equal(t, n, 10)
+	require.Equal(t, string(bytes[:n]), "First word")
+}
+
+func TestNext(t *testing.T) {
+	fs, err := NewFileReaderClosers("./testdata")
+	require.NoError(t, err)
+	reader, err := fs.GetCurrentReader()
+	require.NoError(t, err)
+	require.NotNil(t, reader)
+	ok := fs.Next()
+	require.True(t, ok)
+	reader, err = fs.GetCurrentReader()
+	require.NoError(t, err)
+	require.NotNil(t, reader)
+	ok = fs.Next()
+	require.False(t, ok)
 }
