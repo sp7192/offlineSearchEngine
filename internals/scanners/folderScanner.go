@@ -26,6 +26,8 @@ func (fs *FolderScanner) updateScanner() error {
 		return err
 	}
 	fs.currentScanner = bufio.NewScanner(reader)
+	fs.currentScanner.Split(bufio.ScanWords)
+
 	return nil
 }
 
@@ -50,5 +52,5 @@ func (fs *FolderScanner) Scan() bool {
 }
 
 func (fs *FolderScanner) Text() string {
-	return fs.Text()
+	return fs.currentScanner.Text()
 }
