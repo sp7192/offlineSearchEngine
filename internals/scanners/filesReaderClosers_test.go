@@ -54,7 +54,7 @@ func TestNewFileReaderClosers(t *testing.T) {
 			require.NoError(t, err)
 			require.NotEmpty(t, fs)
 			require.True(t, true, reflect.DeepEqual(test.expectedFileNames, fs.fileNames))
-			require.NotNil(t, fs.currentReader)
+			require.Nil(t, fs.currentReader)
 			require.Zero(t, fs.currentFileIndex)
 		})
 	}
