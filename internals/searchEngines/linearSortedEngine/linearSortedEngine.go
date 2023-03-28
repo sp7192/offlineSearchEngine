@@ -1,10 +1,10 @@
 package linearsortedengine
 
 import (
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	texthandler "OfflineSearchEngine/internals/textHandler"
 
-	"bufio"
 	"sort"
 )
 
@@ -17,7 +17,7 @@ func NewLinearSortedEngine(capacity int, textHandler texthandler.TextHandler) *L
 	return &LinearSorterdEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), TextHandler: textHandler}
 }
 
-func (se *LinearSorterdEngine) AddData(sc *bufio.Scanner, docId int) {
+func (se *LinearSorterdEngine) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
 		str := se.StringConverter.Convert(sc.Text())
 		if str != "" {
