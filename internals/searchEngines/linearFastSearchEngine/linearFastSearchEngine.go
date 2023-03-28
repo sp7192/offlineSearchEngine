@@ -1,25 +1,24 @@
 package linearFastSearchEngine
 
 import (
-	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
-	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
+	texthandler "OfflineSearchEngine/internals/textHandler"
 
 	"bufio"
 )
 
 type LinearFastSearchEngine struct {
-	data            models.TermsInfoWithFrequencies
-	stringConverter linguisticprocess.IStringConverter
+	texthandler.TextHandler
+	data models.TermsInfoWithFrequencies
 }
 
-func NewLinearFastSearchEngine(capacity int, converter linguisticprocess.IStringConverter, scanner scanners.IScanner) *LinearFastSearchEngine {
-	return &LinearFastSearchEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), stringConverter: converter}
+func NewLinearFastSearchEngine(capacity int, textHandler texthandler.TextHandler) *LinearFastSearchEngine {
+	return &LinearFastSearchEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), TextHandler: textHandler}
 }
 
 func (se *LinearFastSearchEngine) AddData(sc *bufio.Scanner, docId int) {
 	for sc.Scan() {
-		str := se.stringConverter.Convert(sc.Text())
+		str := se.StringConverter.Convert(sc.Text())
 		if str != "" {
 			index := se.data.Find(str, docId)
 			if index == -1 {
@@ -34,7 +33,7 @@ func (se *LinearFastSearchEngine) AddData(sc *bufio.Scanner, docId int) {
 func (se *LinearFastSearchEngine) Search(q string) (models.SearchResults, bool) {
 	ret := make(models.SearchResults, 0, 16)
 
-	q = se.stringConverter.Convert(q)
+	q = se.StringConverter.Convert(q)
 	if q == "" {
 		return ret, false
 	}

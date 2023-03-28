@@ -5,6 +5,7 @@ import (
 	"OfflineSearchEngine/internals/searchEngines/interfaces"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	testutils "OfflineSearchEngine/internals/searchEngines/utils"
+	texthandler "OfflineSearchEngine/internals/textHandler"
 
 	"bufio"
 	"reflect"
@@ -13,7 +14,7 @@ import (
 )
 
 func TestNewLinearFastSearchEngine(t *testing.T) {
-	de := NewLinearFastSearchEngine(500, nil, nil)
+	de := NewLinearFastSearchEngine(500, texthandler.TextHandler{})
 	if cap(de.data) != 500 {
 		t.Errorf("got cap : %d, want : %d", cap(de.data), 500)
 	}
@@ -87,10 +88,12 @@ func TestAddData(t *testing.T) {
 		},
 	}
 
+	lm := linguisticprocess.NewLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
+	th := texthandler.NewTextHandler(lm, nil, nil)
+
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			lm := linguisticprocess.CreateLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
-			de := NewLinearFastSearchEngine(100, lm, nil)
+			de := NewLinearFastSearchEngine(100, th)
 			for _, v := range tt.input {
 				sc := bufio.NewScanner(strings.NewReader(v.text))
 				sc.Split(bufio.ScanWords)
@@ -106,9 +109,11 @@ func TestAddData(t *testing.T) {
 }
 
 func TestLinearFastSearchEngineSearch(t *testing.T) {
-	lm := linguisticprocess.CreateLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
+	lm := linguisticprocess.NewLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
+	th := texthandler.NewTextHandler(lm, nil, nil)
+
 	testutils.SearchEngineTest(t, func() interfaces.ISearchEngine {
-		se := NewLinearFastSearchEngine(500, lm, nil)
+		se := NewLinearFastSearchEngine(500, th)
 		return se
 	})
 }
