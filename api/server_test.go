@@ -1,8 +1,8 @@
 package api
 
 import (
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
-	"bufio"
 	"bytes"
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +16,7 @@ import (
 type StubSearchEngine struct {
 }
 
-func (s *StubSearchEngine) AddData(sc *bufio.Scanner, code int) {
+func (s *StubSearchEngine) AddData(sc scanners.IScanner, code int) {
 }
 
 func (s *StubSearchEngine) Search(str string) (models.SearchResults, bool) {

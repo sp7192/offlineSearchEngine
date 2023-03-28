@@ -1,11 +1,11 @@
 package interfaces
 
 import (
+	"OfflineSearchEngine/internals/scanners"
 	searchEnginedata "OfflineSearchEngine/internals/searchEngines/models"
-	"bufio"
 )
 
 type ISearchEngine interface {
-	AddData(*bufio.Scanner, int)
+	AddData(scanners.IScanner, int)
 	Search(string) (searchEnginedata.SearchResults, bool)
 }

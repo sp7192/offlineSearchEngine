@@ -1,9 +1,9 @@
 package linearFastAddEngine
 
 import (
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	texthandler "OfflineSearchEngine/internals/textHandler"
-	"bufio"
 )
 
 type LinearFastAddEngine struct {
@@ -15,7 +15,7 @@ func NewLinearFastAddEngine(capacity int, textHandler texthandler.TextHandler) *
 	return &LinearFastAddEngine{data: make([]models.TermInfo, 0, capacity), TextHandler: textHandler}
 }
 
-func (se *LinearFastAddEngine) AddData(sc *bufio.Scanner, docId int) {
+func (se *LinearFastAddEngine) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
 		str := se.StringConverter.Convert(sc.Text())
 		if str != "" {

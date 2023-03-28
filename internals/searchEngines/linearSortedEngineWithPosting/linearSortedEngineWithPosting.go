@@ -1,9 +1,9 @@
 package linearsortedenginewithposting
 
 import (
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	texthandler "OfflineSearchEngine/internals/textHandler"
-	"bufio"
 	"sort"
 )
 
@@ -28,7 +28,7 @@ func (se *LinearSorterdEngineWithPosting) AddDataToPostingList(index int, str st
 	}
 }
 
-func (se *LinearSorterdEngineWithPosting) AddData(sc *bufio.Scanner, docId int) {
+func (se *LinearSorterdEngineWithPosting) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
 		str := se.StringConverter.Convert(sc.Text())
 		if str != "" {

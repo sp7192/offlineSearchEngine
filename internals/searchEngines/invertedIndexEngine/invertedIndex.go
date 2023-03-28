@@ -1,9 +1,9 @@
 package invertedIndexEngine
 
 import (
+	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	texthandler "OfflineSearchEngine/internals/textHandler"
-	"bufio"
 )
 
 type InvertedIndexEngine struct {
@@ -15,7 +15,7 @@ func NewInvertedIndexEngine(capacity int, textHandler texthandler.TextHandler) *
 	return &InvertedIndexEngine{data: make(map[string]models.SearchResults, capacity), TextHandler: textHandler}
 }
 
-func (se *InvertedIndexEngine) AddData(sc *bufio.Scanner, docId int) {
+func (se *InvertedIndexEngine) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
 		str := se.StringConverter.Convert(sc.Text())
 		if str != "" {
