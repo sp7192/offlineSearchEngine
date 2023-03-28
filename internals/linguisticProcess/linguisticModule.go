@@ -4,7 +4,7 @@ type LinguisticModule struct {
 	converters []IStringConverter
 }
 
-func CreateLinguisticModule(converters ...IStringConverter) LinguisticModule {
+func NewLinguisticModule(converters ...IStringConverter) LinguisticModule {
 	return LinguisticModule{converters: converters}
 }
 
