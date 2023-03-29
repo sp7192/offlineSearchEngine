@@ -28,8 +28,11 @@ func TestGetFilename(t *testing.T) {
 	require.NotNil(t, idg.filenamesId)
 	require.Zero(t, idg.lastId)
 
-	idg.AddFilename("a.txt")
-	idg.AddFilename("b.txt")
+	i := idg.AddFilename("a.txt")
+	j := idg.AddFilename("b.txt")
+
+	require.Equal(t, i, 0)
+	require.Equal(t, j, 1)
 
 	tests := map[string]struct {
 		input    int

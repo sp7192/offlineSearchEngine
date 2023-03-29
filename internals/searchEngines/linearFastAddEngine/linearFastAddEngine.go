@@ -1,23 +1,23 @@
 package linearFastAddEngine
 
 import (
+	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
-	texthandler "OfflineSearchEngine/internals/textHandler"
 )
 
 type LinearFastAddEngine struct {
-	texthandler.TextHandler
-	data []models.TermInfo
+	converter linguisticprocess.IStringConverter
+	data      []models.TermInfo
 }
 
-func NewLinearFastAddEngine(capacity int, textHandler texthandler.TextHandler) *LinearFastAddEngine {
-	return &LinearFastAddEngine{data: make([]models.TermInfo, 0, capacity), TextHandler: textHandler}
+func NewLinearFastAddEngine(capacity int, converter linguisticprocess.IStringConverter) *LinearFastAddEngine {
+	return &LinearFastAddEngine{data: make([]models.TermInfo, 0, capacity), converter: converter}
 }
 
 func (se *LinearFastAddEngine) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
-		str := se.StringConverter.Convert(sc.Text())
+		str := se.converter.Convert(sc.Text())
 		if str != "" {
 			se.data = append(se.data, models.TermInfo{Term: str, DocId: docId})
 		}
@@ -27,7 +27,7 @@ func (se *LinearFastAddEngine) AddData(sc scanners.IScanner, docId int) {
 func (se *LinearFastAddEngine) Search(q string) (models.SearchResults, bool) {
 	ret := make(models.SearchResults, 0, 16)
 
-	q = se.StringConverter.Convert(q)
+	q = se.converter.Convert(q)
 	if q == "" {
 		return ret, false
 	}

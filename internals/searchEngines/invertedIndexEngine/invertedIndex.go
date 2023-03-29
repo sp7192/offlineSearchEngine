@@ -1,23 +1,23 @@
 package invertedIndexEngine
 
 import (
+	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
-	texthandler "OfflineSearchEngine/internals/textHandler"
 )
 
 type InvertedIndexEngine struct {
-	texthandler.TextHandler
-	data map[string]models.SearchResults
+	converter linguisticprocess.IStringConverter
+	data      map[string]models.SearchResults
 }
 
-func NewInvertedIndexEngine(capacity int, textHandler texthandler.TextHandler) *InvertedIndexEngine {
-	return &InvertedIndexEngine{data: make(map[string]models.SearchResults, capacity), TextHandler: textHandler}
+func NewInvertedIndexEngine(capacity int, converter linguisticprocess.IStringConverter) *InvertedIndexEngine {
+	return &InvertedIndexEngine{data: make(map[string]models.SearchResults, capacity), converter: converter}
 }
 
 func (se *InvertedIndexEngine) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
-		str := se.StringConverter.Convert(sc.Text())
+		str := se.converter.Convert(sc.Text())
 		if str != "" {
 			_, ok := se.data[str]
 			if !ok {

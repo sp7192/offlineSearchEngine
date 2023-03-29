@@ -1,31 +1,27 @@
 package builder
 
 import (
-	idgenerator "OfflineSearchEngine/internals/idGenerator"
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
-	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/interfaces"
 	"OfflineSearchEngine/internals/searchEngines/invertedIndexEngine"
 	"OfflineSearchEngine/internals/searchEngines/linearFastAddEngine"
 	"OfflineSearchEngine/internals/searchEngines/linearFastSearchEngine"
 	linearsortedengine "OfflineSearchEngine/internals/searchEngines/linearSortedEngine"
 	linearsortedenginewithposting "OfflineSearchEngine/internals/searchEngines/linearSortedEngineWithPosting"
-	texthandler "OfflineSearchEngine/internals/textHandler"
 )
 
-func NewSearchEngine(name string, capacity int, converter linguisticprocess.IStringConverter, scanner scanners.IScanner, idGenerator idgenerator.IIdGenerator) interfaces.ISearchEngine {
-	textHandler := texthandler.NewTextHandler(converter, scanner, idGenerator)
+func NewSearchEngine(name string, capacity int, converter linguisticprocess.IStringConverter) interfaces.ISearchEngine {
 	switch name {
 	case "LinearFastAddEngine":
-		return linearFastAddEngine.NewLinearFastAddEngine(capacity, textHandler)
+		return linearFastAddEngine.NewLinearFastAddEngine(capacity, converter)
 	case "LinearFastSearchEngine":
-		return linearFastSearchEngine.NewLinearFastSearchEngine(capacity, textHandler)
+		return linearFastSearchEngine.NewLinearFastSearchEngine(capacity, converter)
 	case "LinearSortedEngine":
-		return linearsortedengine.NewLinearSortedEngine(capacity, textHandler)
+		return linearsortedengine.NewLinearSortedEngine(capacity, converter)
 	case "LinearSortedEngineWithPosting":
-		return linearsortedenginewithposting.NewLinearSortedEngineWithPosting(capacity, textHandler)
+		return linearsortedenginewithposting.NewLinearSortedEngineWithPosting(capacity, converter)
 	case "InvertedIndex":
-		return invertedIndexEngine.NewInvertedIndexEngine(capacity, textHandler)
+		return invertedIndexEngine.NewInvertedIndexEngine(capacity, converter)
 	}
 	return nil
 }
