@@ -1,19 +1,19 @@
 package linearsortedenginewithposting
 
 import (
+	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
-	texthandler "OfflineSearchEngine/internals/textHandler"
 	"sort"
 )
 
 type LinearSorterdEngineWithPosting struct {
-	texthandler.TextHandler
-	data models.TermPostingsArray
+	converter linguisticprocess.IStringConverter
+	data      models.TermPostingsArray
 }
 
-func NewLinearSortedEngineWithPosting(capacity int, texthandler texthandler.TextHandler) *LinearSorterdEngineWithPosting {
-	return &LinearSorterdEngineWithPosting{data: make(models.TermPostingsArray, 0, capacity), TextHandler: texthandler}
+func NewLinearSortedEngineWithPosting(capacity int, converter linguisticprocess.IStringConverter) *LinearSorterdEngineWithPosting {
+	return &LinearSorterdEngineWithPosting{data: make(models.TermPostingsArray, 0, capacity), converter: converter}
 }
 
 func (se *LinearSorterdEngineWithPosting) AddDataToPostingList(index int, str string, docId int) {
@@ -30,7 +30,7 @@ func (se *LinearSorterdEngineWithPosting) AddDataToPostingList(index int, str st
 
 func (se *LinearSorterdEngineWithPosting) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
-		str := se.StringConverter.Convert(sc.Text())
+		str := se.converter.Convert(sc.Text())
 		if str != "" {
 			index := se.data.Find(str)
 			if index == -1 {

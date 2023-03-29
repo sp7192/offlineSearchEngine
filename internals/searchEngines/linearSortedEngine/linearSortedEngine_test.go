@@ -5,7 +5,6 @@ import (
 	"OfflineSearchEngine/internals/searchEngines/interfaces"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	testutils "OfflineSearchEngine/internals/searchEngines/utils"
-	texthandler "OfflineSearchEngine/internals/textHandler"
 
 	"bufio"
 	"reflect"
@@ -14,7 +13,7 @@ import (
 )
 
 func TestNewLinearSortedEngine(t *testing.T) {
-	de := NewLinearSortedEngine(500, texthandler.TextHandler{})
+	de := NewLinearSortedEngine(500, nil)
 	if cap(de.data) != 500 {
 		t.Errorf("got cap : %d, want : %d", cap(de.data), 500)
 	}
@@ -91,8 +90,7 @@ func TestAddData(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			lm := linguisticprocess.NewLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
-			th := texthandler.NewTextHandler(lm, nil, nil)
-			de := NewLinearSortedEngine(100, th)
+			de := NewLinearSortedEngine(100, lm)
 			for _, v := range tt.input {
 				sc := bufio.NewScanner(strings.NewReader(v.text))
 				sc.Split(bufio.ScanWords)
@@ -109,10 +107,9 @@ func TestAddData(t *testing.T) {
 
 func TestLinearSortedEngineSearch(t *testing.T) {
 	lm := linguisticprocess.NewLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
-	th := texthandler.NewTextHandler(lm, nil, nil)
 
 	testutils.SearchEngineTest(t, func() interfaces.ISearchEngine {
-		se := NewLinearSortedEngine(500, th)
+		se := NewLinearSortedEngine(500, lm)
 		return se
 	})
 }

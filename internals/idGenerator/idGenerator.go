@@ -12,9 +12,11 @@ func NewIdGenerator() IdGenerator {
 	}
 }
 
-func (idg *IdGenerator) AddFilename(fileName string) {
+func (idg *IdGenerator) AddFilename(fileName string) int {
+	ret := idg.lastId
 	idg.filenamesId[idg.lastId] = fileName
 	idg.lastId++
+	return ret
 }
 
 func (idg *IdGenerator) GetFilename(id int) (string, bool) {

@@ -1,25 +1,25 @@
 package linearsortedengine
 
 import (
+	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines/models"
-	texthandler "OfflineSearchEngine/internals/textHandler"
 
 	"sort"
 )
 
 type LinearSorterdEngine struct {
-	texthandler.TextHandler
-	data models.TermsInfoWithFrequencies
+	converter linguisticprocess.IStringConverter
+	data      models.TermsInfoWithFrequencies
 }
 
-func NewLinearSortedEngine(capacity int, textHandler texthandler.TextHandler) *LinearSorterdEngine {
-	return &LinearSorterdEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), TextHandler: textHandler}
+func NewLinearSortedEngine(capacity int, converter linguisticprocess.IStringConverter) *LinearSorterdEngine {
+	return &LinearSorterdEngine{data: make([]models.TermInfoWithFrequency, 0, capacity), converter: converter}
 }
 
 func (se *LinearSorterdEngine) AddData(sc scanners.IScanner, docId int) {
 	for sc.Scan() {
-		str := se.StringConverter.Convert(sc.Text())
+		str := se.converter.Convert(sc.Text())
 		if str != "" {
 			index := se.data.Find(str, docId)
 			if index == -1 {
