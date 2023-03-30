@@ -21,7 +21,7 @@ func NewTextHandler(idGenerator idgenerator.IIdGenerator) TextHandler {
 func (th *TextHandler) LoadData(searchEngine interfaces.ISearchEngine, path string, isRecursive bool) error {
 	var frc *scanners.FileReaderClosers
 	var err error
-	if isRecursive {
+	if !isRecursive {
 		frc, err = scanners.NewFileReaderClosers(path)
 		if err != nil {
 			return err
