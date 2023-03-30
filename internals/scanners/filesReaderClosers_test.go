@@ -63,7 +63,7 @@ func TestNewFileReaderClosers(t *testing.T) {
 func TestGetCurrentReader(t *testing.T) {
 	fs, err := NewFileReaderClosers("./testdata")
 	require.NoError(t, err)
-	reader, err := fs.GetCurrentReader()
+	reader, _, err := fs.GetCurrentReader()
 	require.NoError(t, err)
 	require.NotNil(t, reader)
 	bytes := make([]byte, 64)
@@ -76,12 +76,12 @@ func TestGetCurrentReader(t *testing.T) {
 func TestNext(t *testing.T) {
 	fs, err := NewFileReaderClosers("./testdata")
 	require.NoError(t, err)
-	reader, err := fs.GetCurrentReader()
+	reader, _, err := fs.GetCurrentReader()
 	require.NoError(t, err)
 	require.NotNil(t, reader)
 	ok := fs.Next()
 	require.True(t, ok)
-	reader, err = fs.GetCurrentReader()
+	reader, _, err = fs.GetCurrentReader()
 	require.NoError(t, err)
 	require.NotNil(t, reader)
 	ok = fs.Next()

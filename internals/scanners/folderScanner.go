@@ -21,7 +21,7 @@ func NewFolderScanner(readClosers IReadClosers) (FolderScanner, error) {
 }
 
 func (fs *FolderScanner) updateScanner() error {
-	reader, err := fs.readClosers.GetCurrentReader()
+	reader, _, err := fs.readClosers.GetCurrentReader()
 	if err != nil {
 		return err
 	}
