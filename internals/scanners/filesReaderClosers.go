@@ -42,13 +42,13 @@ func NewFileReaderClosers(path string) (*FileReaderClosers, error) {
 	}, nil
 }
 
-func (frc *FileReaderClosers) GetCurrentReader() (io.ReadCloser, error) {
+func (frc *FileReaderClosers) GetCurrentReader() (io.ReadCloser, string, error) {
 	var err error
 	frc.currentReader, err = os.Open(frc.fileNames[frc.currentFileIndex])
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	return frc.currentReader, nil
+	return frc.currentReader, frc.fileNames[frc.currentFileIndex], nil
 }
 
 func (frc *FileReaderClosers) Next() bool {

@@ -13,9 +13,9 @@ type StubReaderClosers struct {
 	index int
 }
 
-func (src *StubReaderClosers) GetCurrentReader() (io.ReadCloser, error) {
+func (src *StubReaderClosers) GetCurrentReader() (io.ReadCloser, string, error) {
 	readCloser := io.NopCloser(strings.NewReader(src.data[src.index]))
-	return readCloser, nil
+	return readCloser, "", nil
 }
 
 func (src *StubReaderClosers) Next() bool {
