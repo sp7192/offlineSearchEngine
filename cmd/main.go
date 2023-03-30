@@ -2,10 +2,10 @@ package main
 
 import (
 	"OfflineSearchEngine/api"
+	idgenerator "OfflineSearchEngine/internals/idGenerator"
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
 	engineBuilder "OfflineSearchEngine/internals/searchEngines/builder"
-	"bufio"
-	"strings"
+	texthandler "OfflineSearchEngine/internals/textHandler"
 )
 
 func main() {
@@ -13,21 +13,10 @@ func main() {
 		&linguisticprocess.PunctuationRemover{},
 		&linguisticprocess.ToLower{})
 
-	// reader, err := scanners.NewFileReaderClosers("../data")
-	// if err != nil {
-	// 	log.Fatalf("Error in reading : %s\n", err.Error())
-	// }
-	// scanner, err := scanners.NewFolderScanner(reader)
-	// if err != nil {
-	// 	log.Fatalf("Error inx Scanner : %s\n", err.Error())
-	// }
-
-	// idGenerator := idgenerator.NewIdGenerator()
-
+	idGenerator := idgenerator.NewIdGenerator()
+	th := texthandler.NewTextHandler(&idGenerator)
 	se := engineBuilder.NewSearchEngine("InvertedIndex", 500, lm)
-	sc := bufio.NewScanner(strings.NewReader("test query"))
-	sc.Split(bufio.ScanWords)
-	se.AddData(sc, 1)
+	th.LoadData(se, "../data", false)
 	server := api.NewServer(se)
 	server.Run(":8080")
 }
