@@ -28,7 +28,7 @@ func (s *StubSearchEngine) Search(str string) (models.SearchResults, bool) {
 
 func TestSearchHandler(t *testing.T) {
 
-	server := NewServer(&StubSearchEngine{})
+	server := NewServer(&StubSearchEngine{}, nil)
 	w := httptest.NewRecorder()
 	reqBody := SearchRequest{
 		Query: "query",
