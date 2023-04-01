@@ -5,11 +5,11 @@ import (
 )
 
 type FolderScanner struct {
-	readClosers    IReadClosers
+	readClosers    IReaders
 	currentScanner *bufio.Scanner
 }
 
-func NewFolderScanner(readClosers IReadClosers) (FolderScanner, error) {
+func NewFolderScanner(readClosers IReaders) (FolderScanner, error) {
 	ret := FolderScanner{
 		readClosers: readClosers,
 	}
