@@ -50,7 +50,7 @@ func TestNewFileReaderClosers(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			fs, err := NewFileReaderClosers(test.input)
+			fs, err := NewDirectoryFileReaders(test.input)
 			require.NoError(t, err)
 			require.NotEmpty(t, fs)
 			require.True(t, true, reflect.DeepEqual(test.expectedFileNames, fs.fileNames))
@@ -61,7 +61,7 @@ func TestNewFileReaderClosers(t *testing.T) {
 }
 
 func TestGetCurrentReader(t *testing.T) {
-	fs, err := NewFileReaderClosers("./testdata")
+	fs, err := NewDirectoryFileReaders("./testdata")
 	require.NoError(t, err)
 	reader, _, err := fs.GetCurrentReader()
 	require.NoError(t, err)
@@ -74,7 +74,7 @@ func TestGetCurrentReader(t *testing.T) {
 }
 
 func TestNext(t *testing.T) {
-	fs, err := NewFileReaderClosers("./testdata")
+	fs, err := NewDirectoryFileReaders("./testdata")
 	require.NoError(t, err)
 	reader, _, err := fs.GetCurrentReader()
 	require.NoError(t, err)

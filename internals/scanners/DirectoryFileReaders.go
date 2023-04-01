@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-type FileReaderClosers struct {
+type DirectoryFileReaders struct {
 	fileNames        []string
 	currentFileIndex int
 	currentReader    io.ReadCloser
@@ -31,18 +31,18 @@ func getFileNames(path string) ([]string, error) {
 	return ret, nil
 }
 
-func NewFileReaderClosers(path string) (*FileReaderClosers, error) {
+func NewDirectoryFileReaders(path string) (*DirectoryFileReaders, error) {
 	fileNames, err := getFileNames(path)
 	if err != nil {
-		return &FileReaderClosers{}, err
+		return &DirectoryFileReaders{}, err
 	}
 
-	return &FileReaderClosers{
+	return &DirectoryFileReaders{
 		fileNames: fileNames,
 	}, nil
 }
 
-func (frc *FileReaderClosers) GetCurrentReader() (io.ReadCloser, string, error) {
+func (frc *DirectoryFileReaders) GetCurrentReader() (io.ReadCloser, string, error) {
 	var err error
 	frc.currentReader, err = os.Open(frc.fileNames[frc.currentFileIndex])
 	if err != nil {
@@ -51,7 +51,7 @@ func (frc *FileReaderClosers) GetCurrentReader() (io.ReadCloser, string, error) 
 	return frc.currentReader, frc.fileNames[frc.currentFileIndex], nil
 }
 
-func (frc *FileReaderClosers) Next() bool {
+func (frc *DirectoryFileReaders) Next() bool {
 	if frc.currentReader != nil {
 		frc.currentReader.Close()
 	}

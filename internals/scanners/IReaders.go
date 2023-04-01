@@ -2,7 +2,7 @@ package scanners
 
 import "io"
 
-type IReadClosers interface {
+type IReaders interface {
 	GetCurrentReader() (io.ReadCloser, string, error)
 	Next() bool
 }
