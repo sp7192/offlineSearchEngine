@@ -21,7 +21,8 @@ func NewServer(searchEngine interfaces.ISearchEngine, idGenerator idgenerator.II
 }
 
 func (s *Server) LoadDirectoryFiles(path string) error {
-	frc, err := scanners.NewDirectoryFileReaders("../data")
+	fs := scanners.NewFolderScanner()
+	frc, err := scanners.NewDirectoryFileReaders("../data", fs)
 	if err != nil {
 		return err
 	}
