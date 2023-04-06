@@ -22,7 +22,7 @@ func main() {
 	idGenerator := idgenerator.NewIdGenerator()
 	se := engineBuilder.NewSearchEngine(configs.EngineType, 500, lm)
 
-	server := api.NewServer(se, &idGenerator)
+	server := api.NewServer(se, &idGenerator, &configs)
 	err = server.LoadDirectoryFiles("../data")
 	if err != nil {
 		log.Fatalf("could not load files, err is : %s\n", err.Error())

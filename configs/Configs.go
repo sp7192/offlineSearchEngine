@@ -9,6 +9,7 @@ import (
 
 type Configs struct {
 	EngineType string `mapstructure:"ENGINE_TYPE"`
+	XApiKey    string `mapstructure:"X_API_KEY"`
 }
 
 func LoadConfigs(path string) (Configs, error) {
