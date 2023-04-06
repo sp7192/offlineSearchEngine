@@ -65,6 +65,7 @@ func (s *Server) Run(address string) error {
 
 func (s *Server) setRoutes() {
 	s.ginEngine.POST("/signin", s.jwtHandler.SignInHandler)
+	s.ginEngine.POST("/refresh", s.jwtHandler.RefreshHandler)
 
 	apiGroup := s.ginEngine.Group("/api")
 	apiGroup.Use(s.jwtHandler.AuthMiddleware())
