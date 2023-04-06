@@ -1,4 +1,4 @@
-package api
+package controllers
 
 import (
 	idgenerator "OfflineSearchEngine/internals/idGenerator"
@@ -11,16 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ServerController struct {
+type SearchEngineController struct {
 	searchEngine interfaces.ISearchEngine
 	idGenerator  idgenerator.IIdGenerator
 }
 
-func NewServerController(searchEngine interfaces.ISearchEngine, idGenerator idgenerator.IIdGenerator) *ServerController {
-	return &ServerController{searchEngine: searchEngine, idGenerator: idGenerator}
+func NewSearchEngineController(searchEngine interfaces.ISearchEngine, idGenerator idgenerator.IIdGenerator) *SearchEngineController {
+	return &SearchEngineController{searchEngine: searchEngine, idGenerator: idGenerator}
 }
 
-func (s *ServerController) loadData(frc scanners.IReaders) error {
+func (s *SearchEngineController) LoadData(frc scanners.IReaders) error {
 	for {
 		reader, name, err := frc.GetCurrentReader()
 		if err != nil {
@@ -46,7 +46,7 @@ type SearchRequest struct {
 	Query string `json:"query" binding:"required"`
 }
 
-func (s *ServerController) searchHandler(c *gin.Context) {
+func (s *SearchEngineController) Search(c *gin.Context) {
 	var req SearchRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
