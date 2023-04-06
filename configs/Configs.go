@@ -10,6 +10,7 @@ import (
 type Configs struct {
 	EngineType string `mapstructure:"ENGINE_TYPE"`
 	XApiKey    string `mapstructure:"X_API_KEY"`
+	JWTSecret  string `mapstructure:"JWT_SECRET"`
 }
 
 func LoadConfigs(path string) (Configs, error) {
