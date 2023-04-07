@@ -5,7 +5,7 @@ import (
 	"OfflineSearchEngine/configs"
 	idgenerator "OfflineSearchEngine/internals/idGenerator"
 	"OfflineSearchEngine/internals/scanners"
-	"OfflineSearchEngine/internals/searchEngines/interfaces"
+	"OfflineSearchEngine/internals/searchEngines"
 	"fmt"
 	"net/http"
 	"time"
@@ -20,7 +20,7 @@ type Server struct {
 	jwtHandler             *controllers.JWTHandler
 }
 
-func NewServer(searchEngine interfaces.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs) *Server {
+func NewServer(searchEngine searchEngines.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs) *Server {
 	server := &Server{
 		searchEngineController: controllers.NewSearchEngineController(searchEngine, idGenerator),
 		configs:                configs,

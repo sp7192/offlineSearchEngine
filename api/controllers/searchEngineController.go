@@ -3,7 +3,7 @@ package controllers
 import (
 	idgenerator "OfflineSearchEngine/internals/idGenerator"
 	"OfflineSearchEngine/internals/scanners"
-	"OfflineSearchEngine/internals/searchEngines/interfaces"
+	"OfflineSearchEngine/internals/searchEngines"
 	"bufio"
 	"fmt"
 	"net/http"
@@ -12,11 +12,11 @@ import (
 )
 
 type SearchEngineController struct {
-	searchEngine interfaces.ISearchEngine
+	searchEngine searchEngines.ISearchEngine
 	idGenerator  idgenerator.IIdGenerator
 }
 
-func NewSearchEngineController(searchEngine interfaces.ISearchEngine, idGenerator idgenerator.IIdGenerator) *SearchEngineController {
+func NewSearchEngineController(searchEngine searchEngines.ISearchEngine, idGenerator idgenerator.IIdGenerator) *SearchEngineController {
 	return &SearchEngineController{searchEngine: searchEngine, idGenerator: idGenerator}
 }
 
