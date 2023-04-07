@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"OfflineSearchEngine/internals/searchEngines/interfaces"
+	"OfflineSearchEngine/internals/searchEngines"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	"OfflineSearchEngine/internals/searchEngines/testmodels"
 	"bufio"
@@ -59,7 +59,7 @@ func GetAddDataInputs() []testmodels.AddDataInput {
 	return ret
 }
 
-func SearchEngineTest(t *testing.T, NewSearchEngine func() interfaces.ISearchEngine) {
+func SearchEngineTest(t *testing.T, NewSearchEngine func() searchEngines.ISearchEngine) {
 	tests := map[string]struct {
 		input    testmodels.SearchInputData
 		expected testmodels.SearchOutput
