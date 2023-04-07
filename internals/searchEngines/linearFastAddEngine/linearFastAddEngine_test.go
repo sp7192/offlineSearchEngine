@@ -2,7 +2,7 @@ package linearFastAddEngine
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
-	"OfflineSearchEngine/internals/searchEngines/interfaces"
+	"OfflineSearchEngine/internals/searchEngines"
 	"OfflineSearchEngine/internals/searchEngines/models"
 	"OfflineSearchEngine/internals/searchEngines/testmodels"
 	testutils "OfflineSearchEngine/internals/searchEngines/utils"
@@ -77,7 +77,7 @@ func TestLinearFastAddEngineAddData(t *testing.T) {
 func TestLinearFastAddEngineSearch(t *testing.T) {
 	lm := linguisticprocess.NewLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
 
-	testutils.SearchEngineTest(t, func() interfaces.ISearchEngine {
+	testutils.SearchEngineTest(t, func() searchEngines.ISearchEngine {
 		se := NewLinearFastAddEngine(500, lm)
 		return se
 	})
