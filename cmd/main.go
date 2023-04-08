@@ -5,7 +5,7 @@ import (
 	"OfflineSearchEngine/configs"
 	idgenerator "OfflineSearchEngine/internals/idGenerator"
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
-	engineBuilder "OfflineSearchEngine/internals/searchEngines/builder"
+	"OfflineSearchEngine/internals/searchEngines/builder"
 	"log"
 )
 
@@ -20,7 +20,7 @@ func main() {
 		&linguisticprocess.ToLower{})
 
 	idGenerator := idgenerator.NewIdGenerator()
-	se := engineBuilder.NewSearchEngine(configs.EngineType, 500, lm)
+	se := builder.NewSearchEngine(configs.EngineType, 500, lm)
 
 	server := api.NewServer(se, &idGenerator, &configs)
 	err = server.LoadDirectoryFiles("../data")

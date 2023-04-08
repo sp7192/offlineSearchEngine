@@ -1,4 +1,4 @@
-package interfaces
+package searchEngines
 
 import (
 	"OfflineSearchEngine/internals/scanners"

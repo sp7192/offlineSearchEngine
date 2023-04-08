@@ -5,7 +5,7 @@ import (
 	"OfflineSearchEngine/configs"
 	idgenerator "OfflineSearchEngine/internals/idGenerator"
 	"OfflineSearchEngine/internals/scanners"
-	"OfflineSearchEngine/internals/searchEngines/interfaces"
+	"OfflineSearchEngine/internals/searchEngines"
 	"fmt"
 	"net/http"
 	"time"
@@ -17,12 +17,14 @@ type Server struct {
 	ginEngine              *gin.Engine
 	searchEngineController *controllers.SearchEngineController
 	configs                *configs.Configs
+	jwtHandler             *controllers.JWTHandler
 }
 
-func NewServer(searchEngine interfaces.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs) *Server {
+func NewServer(searchEngine searchEngines.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs) *Server {
 	server := &Server{
 		searchEngineController: controllers.NewSearchEngineController(searchEngine, idGenerator),
 		configs:                configs,
+		jwtHandler:             controllers.NewJWTHandler(configs),
 	}
 	server.ginEngine = gin.Default()
 	server.setRoutes()
@@ -62,8 +64,12 @@ func (s *Server) Run(address string) error {
 }
 
 func (s *Server) setRoutes() {
-	s.ginEngine.Use(s.AuthMiddleware())
-	s.ginEngine.Use(s.MetricMiddleware())
-	s.ginEngine.POST("/search", s.searchEngineController.Search)
-	s.ginEngine.POST("/register", controllers.Register)
+	s.ginEngine.POST("/signin", s.jwtHandler.SignInHandler)
+	s.ginEngine.POST("/refresh", s.jwtHandler.RefreshHandler)
+
+	apiGroup := s.ginEngine.Group("/api")
+	apiGroup.Use(s.jwtHandler.AuthMiddleware())
+	apiGroup.Use(s.MetricMiddleware())
+
+	apiGroup.POST("/search", s.searchEngineController.Search)
 }

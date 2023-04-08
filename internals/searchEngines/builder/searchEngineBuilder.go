@@ -2,7 +2,7 @@ package builder
 
 import (
 	linguisticprocess "OfflineSearchEngine/internals/linguisticProcess"
-	"OfflineSearchEngine/internals/searchEngines/interfaces"
+	"OfflineSearchEngine/internals/searchEngines"
 	"OfflineSearchEngine/internals/searchEngines/invertedIndexEngine"
 	"OfflineSearchEngine/internals/searchEngines/linearFastAddEngine"
 	"OfflineSearchEngine/internals/searchEngines/linearFastSearchEngine"
@@ -10,7 +10,7 @@ import (
 	linearsortedenginewithposting "OfflineSearchEngine/internals/searchEngines/linearSortedEngineWithPosting"
 )
 
-func NewSearchEngine(name string, capacity int, converter linguisticprocess.IStringConverter) interfaces.ISearchEngine {
+func NewSearchEngine(name string, capacity int, converter linguisticprocess.IStringConverter) searchEngines.ISearchEngine {
 	switch name {
 	case "LinearFastAddEngine":
 		return linearFastAddEngine.NewLinearFastAddEngine(capacity, converter)
