@@ -8,6 +8,7 @@ import (
 )
 
 type DbConfigs struct {
+	Driver   string `mapstructure:"DB_DRIVER"`
 	User     string `mapstructure:"DB_USER"`
 	Password string `mapstructure:"DB_PASSWORD"`
 	IP       string `mapstructure:"DB_IP"`
@@ -15,8 +16,8 @@ type DbConfigs struct {
 	Name     string `mapstructure:"DB_NAME"`
 }
 
-func LoadDbConfigs(path string) (Configs, error) {
-	var ret Configs
+func LoadDbConfigs(path string) (DbConfigs, error) {
+	var ret DbConfigs
 	viper.AddConfigPath(path)
 	viper.SetConfigName("dbconfigs")
 	viper.SetConfigType("env")
