@@ -3,6 +3,7 @@ package db
 import (
 	"OfflineSearchEngine/configs"
 	"OfflineSearchEngine/models"
+	"errors"
 	"fmt"
 
 	"gorm.io/driver/postgres"
@@ -27,18 +28,47 @@ func LoadDb(conf *configs.DbConfigs) *DatabaseHandler {
 	}
 }
 
-func (handler *DatabaseHandler) CreateUser(user models.User) error {
-	return nil
+func (handler *DatabaseHandler) CreateUser(user *models.User) (*models.User, error) {
+	res := handler.db.Create(user)
+	if res.RowsAffected == 0 {
+		return &models.User{}, errors.New("user not found")
+	}
+	return user, nil
 }
 
-func (handler *DatabaseHandler) RemoveUser(user models.User) error {
-	return nil
+func (handler *DatabaseHandler) ReadUser(id string) (*models.User, error) {
+	var user models.User
+	res := handler.db.First(&user, id)
+	if res.RowsAffected == 0 {
+		return nil, errors.New("article not found")
+	}
+	return &user, nil
 }
 
-func (handler *DatabaseHandler) FindUserName(user models.User) bool {
-	return true
+func (handler *DatabaseHandler) ReadUsers() ([]*models.User, error) {
+	var users []*models.User
+	res := handler.db.Find(&users)
+	if res.Error != nil {
+		return nil, errors.New("authors not found")
+	}
+	return users, nil
 }
 
-func (handler *DatabaseHandler) UpdateUser(user models.User) error {
+func (handler *DatabaseHandler) UpdateUser(user *models.User) (*models.User, error) {
+
+	var updateUser models.User
+	result := handler.db.Model(&updateUser).Where(user.ID).Updates(user)
+	if result.RowsAffected == 0 {
+		return &models.User{}, errors.New("artcile not updated")
+	}
+	return &updateUser, nil
+}
+
+func (handler *DatabaseHandler) DeleteUser(id string) error {
+	var deleteUser models.User
+	result := handler.db.Where(id).Delete(&deleteUser)
+	if result.RowsAffected == 0 {
+		return errors.New("article data not deleted")
+	}
 	return nil
 }
