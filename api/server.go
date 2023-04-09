@@ -3,6 +3,7 @@ package api
 import (
 	"OfflineSearchEngine/api/controllers"
 	"OfflineSearchEngine/configs"
+	"OfflineSearchEngine/internals/db"
 	idgenerator "OfflineSearchEngine/internals/idGenerator"
 	"OfflineSearchEngine/internals/scanners"
 	"OfflineSearchEngine/internals/searchEngines"
@@ -18,6 +19,7 @@ type Server struct {
 	searchEngineController *controllers.SearchEngineController
 	configs                *configs.Configs
 	jwtHandler             *controllers.JWTHandler
+	db                     *db.DatabaseHandler
 }
 
 func NewServer(searchEngine searchEngines.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs) *Server {
