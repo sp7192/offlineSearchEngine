@@ -22,11 +22,13 @@ type Server struct {
 	db                     *db.DatabaseHandler
 }
 
-func NewServer(searchEngine searchEngines.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs) *Server {
+func NewServer(searchEngine searchEngines.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs, dbConfigs *configs.DbConfigs) *Server {
+	db := db.LoadDb(dbConfigs)
 	server := &Server{
 		searchEngineController: controllers.NewSearchEngineController(searchEngine, idGenerator),
 		configs:                configs,
-		jwtHandler:             controllers.NewJWTHandler(configs),
+		jwtHandler:             controllers.NewJWTHandler(configs, db),
+		db:                     db,
 	}
 	server.ginEngine = gin.Default()
 	server.setRoutes()

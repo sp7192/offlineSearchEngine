@@ -18,7 +18,7 @@ func LoadDb(conf *configs.DbConfigs) *DatabaseHandler {
 	db, err := gorm.Open(postgres.Open(fmt.Sprintf("%s://%s:%s@%s:%d/%s",
 		conf.Driver, conf.User, conf.Password, conf.IP, conf.Port, conf.Name)), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		panic("failed to connect database, create the db first!")
 	}
 	// Migrate the schema
 	db.AutoMigrate(&models.User{})
@@ -43,6 +43,14 @@ func (handler *DatabaseHandler) ReadUser(id string) (*models.User, error) {
 		return nil, errors.New("article not found")
 	}
 	return &user, nil
+}
+
+func (handler *DatabaseHandler) FindUser(user *models.User) bool {
+	res := handler.db.Find(&user)
+	if res.RowsAffected == 0 {
+		return false
+	}
+	return true
 }
 
 func (handler *DatabaseHandler) ReadUsers() ([]*models.User, error) {
