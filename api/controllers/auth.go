@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"OfflineSearchEngine/configs"
+	"OfflineSearchEngine/internals/db"
 	"OfflineSearchEngine/models"
 	"net/http"
 	"time"
@@ -12,10 +13,11 @@ import (
 
 type JWTHandler struct {
 	configs *configs.Configs
+	db      *db.DatabaseHandler
 }
 
-func NewJWTHandler(configs *configs.Configs) *JWTHandler {
-	return &JWTHandler{configs: configs}
+func NewJWTHandler(configs *configs.Configs, db *db.DatabaseHandler) *JWTHandler {
+	return &JWTHandler{configs: configs, db: db}
 }
 
 type Claims struct {
