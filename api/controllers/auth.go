@@ -3,6 +3,7 @@ package controllers
 import (
 	"OfflineSearchEngine/configs"
 	"OfflineSearchEngine/internals/db"
+	"OfflineSearchEngine/internals/utils"
 	"OfflineSearchEngine/models"
 	"net/http"
 	"time"
@@ -36,7 +37,13 @@ func (handler *JWTHandler) SignInHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if user.Username != "admin" || user.Password != "admin" {
+	hashed, err := utils.HashAndSalt([]byte(user.Password))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	user.Password = hashed
+	if handler.db.FindUser(&user) {
 		c.JSON(http.StatusUnauthorized,
 			gin.H{"error": "Invalid username or password"})
 		return

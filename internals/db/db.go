@@ -56,7 +56,7 @@ func (handler *DatabaseHandler) ReadUser(id string) (*models.User, error) {
 }
 
 func (handler *DatabaseHandler) FindUser(user *models.User) bool {
-	res := handler.db.Find(&user)
+	res := handler.db.Where(map[string]interface{}{"username": user.Username, "password": user.Password}).Find(&user)
 	if res.RowsAffected == 0 {
 		return false
 	}
