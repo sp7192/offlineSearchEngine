@@ -2,9 +2,11 @@ package db
 
 import (
 	"OfflineSearchEngine/configs"
+	"OfflineSearchEngine/internals/utils"
 	"OfflineSearchEngine/models"
 	"errors"
 	"fmt"
+	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -22,10 +24,18 @@ func LoadDb(conf *configs.DbConfigs) *DatabaseHandler {
 	}
 	// Migrate the schema
 	db.AutoMigrate(&models.User{})
-
 	return &DatabaseHandler{
 		db: db,
 	}
+}
+
+func (handler *DatabaseHandler) InitUsers() {
+	hashedPass, err := utils.HashAndSalt([]byte("1234"))
+	if err != nil {
+		log.Fatal("Could not hash and salt password")
+	}
+
+	handler.CreateUser(&models.User{Username: "admin", Password: hashedPass})
 }
 
 func (handler *DatabaseHandler) CreateUser(user *models.User) (*models.User, error) {

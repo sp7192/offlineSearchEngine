@@ -24,6 +24,7 @@ type Server struct {
 
 func NewServer(searchEngine searchEngines.ISearchEngine, idGenerator idgenerator.IIdGenerator, configs *configs.Configs, dbConfigs *configs.DbConfigs) *Server {
 	db := db.LoadDb(dbConfigs)
+	db.InitUsers()
 	server := &Server{
 		searchEngineController: controllers.NewSearchEngineController(searchEngine, idGenerator),
 		configs:                configs,
