@@ -37,13 +37,8 @@ func (handler *JWTHandler) SignInHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	hashed, err := utils.HashAndSalt([]byte(user.Password))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	user.Password = hashed
-	if handler.db.FindUser(&user) {
+	dbUser, err := handler.db.ReadUserByUsername(user.Username)
+	if err != nil || !utils.ComparePasswords(dbUser.Password, []byte(user.Password)) {
 		c.JSON(http.StatusUnauthorized,
 			gin.H{"error": "Invalid username or password"})
 		return
