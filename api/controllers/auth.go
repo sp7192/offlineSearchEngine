@@ -44,6 +44,8 @@ func (handler *JWTHandler) SignInHandler(c *gin.Context) {
 		return
 	}
 
+	c.Set("userId", int(dbUser.ID))
+
 	expirationTime := time.Now().Add(10 * time.Minute)
 	claims := &Claims{
 		Username: user.Username,
