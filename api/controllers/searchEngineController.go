@@ -52,6 +52,8 @@ func (s *SearchEngineController) Search(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	id := c.GetInt("userId")
+	fmt.Println("user id is : ", id)
 	result, ok := s.searchEngine.Search(req.Query)
 	if !ok {
 		err := fmt.Errorf("Query not found")

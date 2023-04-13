@@ -8,7 +8,7 @@ import (
 
 type InvertedIndexEngine struct {
 	converter linguisticprocess.IStringConverter
-	data      map[string]models.SearchResults
+	data map[string]models.SearchResults
 }
 
 func NewInvertedIndexEngine(capacity int, converter linguisticprocess.IStringConverter) *InvertedIndexEngine {

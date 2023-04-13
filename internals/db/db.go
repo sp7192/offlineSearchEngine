@@ -24,6 +24,8 @@ func LoadDb(conf *configs.DbConfigs) *DatabaseHandler {
 	}
 	// Migrate the schema
 	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.SearchHistory{})
+
 	return &DatabaseHandler{
 		db: db,
 	}
