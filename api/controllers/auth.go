@@ -15,10 +15,11 @@ import (
 type JWTHandler struct {
 	configs *configs.Configs
 	db      *db.DatabaseHandler
+	userIds map[string]uint
 }
 
 func NewJWTHandler(configs *configs.Configs, db *db.DatabaseHandler) *JWTHandler {
-	return &JWTHandler{configs: configs, db: db}
+	return &JWTHandler{configs: configs, db: db, userIds: make(map[string]uint)}
 }
 
 type Claims struct {
@@ -44,8 +45,6 @@ func (handler *JWTHandler) SignInHandler(c *gin.Context) {
 		return
 	}
 
-	c.Set("userId", int(dbUser.ID))
-
 	expirationTime := time.Now().Add(10 * time.Minute)
 	claims := &Claims{
 		Username: user.Username,
@@ -65,6 +64,7 @@ func (handler *JWTHandler) SignInHandler(c *gin.Context) {
 		Token:   tokenString,
 		Expires: expirationTime,
 	}
+	handler.userIds[tokenString] = dbUser.ID
 	c.JSON(http.StatusOK, jwtOutput)
 }
 
@@ -82,6 +82,9 @@ func (handler *JWTHandler) AuthMiddleware() gin.HandlerFunc {
 		}
 		if tkn == nil || !tkn.Valid {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthoized"})
+		}
+		if id, ok := handler.userIds[tokenValue]; ok {
+			c.Set("userId", int(id))
 		}
 		c.Next()
 	}
