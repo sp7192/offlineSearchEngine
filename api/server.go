@@ -55,7 +55,7 @@ func (s *Server) AuthMiddleware() gin.HandlerFunc {
 }
 
 func (s *Server) LoadDirectoryFiles(path string) error {
-	fs := scanners.NewFolderScanner()
+	fs := scanners.NewRecursiveFolderScanner()
 	frc, err := scanners.NewDirectoryFileReaders("../data", fs)
 	if err != nil {
 		return err
