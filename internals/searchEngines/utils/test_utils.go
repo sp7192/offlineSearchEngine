@@ -5,10 +5,41 @@ import (
 	"OfflineSearchEngine/internals/searchEngines/models"
 	"OfflineSearchEngine/internals/searchEngines/testmodels"
 	"bufio"
+	"math/rand"
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 )
+
+func TestMain(t *testing.T) {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
+
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func GetRandomString() string {
+	n := rand.Intn(10)
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
+}
+
+func GetRandomAddDataInput(n int) []testmodels.DocData {
+	ret := make([]testmodels.DocData, 0, n)
+	for i := 0; i < n; i++ {
+		wordsCount := rand.Intn(10000)
+		words := make([]string, 0, wordsCount)
+		for j := 0; j < wordsCount; j++ {
+			words = append(words, GetRandomString())
+		}
+		text := strings.Join(words, " ")
+		ret = append(ret, testmodels.DocData{DocId: i, Text: text})
+	}
+	return ret
+}
 
 func GetAddDataInputs() []testmodels.AddDataInput {
 	ret := []testmodels.AddDataInput{

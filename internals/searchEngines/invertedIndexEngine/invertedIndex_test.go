@@ -109,3 +109,18 @@ func TestLinearSortedEngineSearch(t *testing.T) {
 		return se
 	})
 }
+
+func BenchmarkLinearSortedEngineSearch(b *testing.B) {
+	data := testutils.GetRandomAddDataInput(10000)
+	lm := linguisticprocess.NewLinguisticModule(&linguisticprocess.CheckStopWord{}, &linguisticprocess.PunctuationRemover{}, &linguisticprocess.ToLower{})
+	se := NewInvertedIndexEngine(1000000, lm)
+	for _, v := range data {
+		sc := bufio.NewScanner(strings.NewReader(v.Text))
+		sc.Split(bufio.ScanWords)
+		se.AddData(sc, v.DocId)
+	}
+	for i := 0; i < b.N; i++ {
+		q := testutils.GetRandomString()
+		se.Search(q)
+	}
+}
